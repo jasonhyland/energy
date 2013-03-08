@@ -28,10 +28,10 @@
 
   global $path; 
 ?>
-<script type="text/javascript" src="<?php echo $path; ?>Lib/flot/jquery.min.js"></script>
+
 <script type="text/javascript" src="<?php echo $path; ?>Modules/energy/stack_lib/stacks.js"></script>
 <script type="text/javascript" src="<?php echo $path; ?>Modules/energy/stack_lib/stack_prepare.js"></script>
-
+<br><br>
 <div style="width:900px; margin-bottom:10px;" >
   <span style="font-size:24px; font-weight:bold;">Energy Items</span>
   <span style="font-size:24px; float:right;">Year 2012</span>

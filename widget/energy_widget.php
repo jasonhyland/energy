@@ -1,6 +1,6 @@
 <?php
 
-  global $session, $path;
+  global $mysqli, $session, $path;
 
   // energyaudit module needs to be installed:
   echo "<script type='text/javascript' src='".$path."Modules/energy/stack_lib/stacks.js'></script>"; 
@@ -9,9 +9,11 @@
   echo "<script type='text/javascript' src='".$path."Modules/energy/widget/energy_render.js'></script>";  
 
   include "Modules/energy/energy_model.php";
+  $energy = new Energy($mysqli);
+
   include "Modules/energy/energytypes.php";
 
-  $energyitems = energy_get_year($session['userid'], 2012);
+  $energyitems = $energy->get_year($session['userid'], 2012);
 ?>
 
 <script>

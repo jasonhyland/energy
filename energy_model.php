@@ -1,37 +1,50 @@
 <?php
 
-function energy_item_set($userid, $tag, $year, $data)
+// no direct access
+defined('EMONCMS_EXEC') or die('Restricted access');
+
+class Energy
 {
-  $data = json_encode($data);
+    private $mysqli;
 
-  $result = db_query("SELECT `id` FROM energy WHERE `userid` = '$userid' AND `tag` = '$tag' AND `year` = '$year' ");
-  $row = db_fetch_object($result);
+    public function __construct($mysqli)
+    {
+        $this->mysqli = $mysqli;
+    }
 
-  if (!$row)
-  {
-    db_query("INSERT INTO energy (`userid`, `tag`, `year`, `data`) VALUES ('$userid','$tag','$year','$data')");
-  }
-  else
-  {
-    $id = $row->id;
-    db_query("UPDATE energy SET `data` = '$data' WHERE `id` = '$id'");
-  }
-}
+    public function item_set($userid, $tag, $year, $data)
+    {
+      $data = json_encode($data);
 
-function energy_item_remove($userid, $tag, $year)
-{
-  $result = db_query("DELETE FROM energy WHERE `userid` = '$userid' AND `tag` = '$tag' AND `year` = '$year' ");
-}
+      $result = $this->mysqli->query("SELECT `id` FROM energy WHERE `userid` = '$userid' AND `tag` = '$tag' AND `year` = '$year' ");
+      $row = $result->fetch_object();
 
-function energy_get_year($userid, $year)
-{
-  $entries = array();
-  $result = db_query("SELECT `id`, `tag`, `year`, `data` FROM energy WHERE `userid` = '$userid' AND `year` = '$year' ");
-  while ($row = db_fetch_object($result)) 
-  {
-    $entries[] = $row;
-  }
-  return $entries;
+      if (!$row)
+      {
+        $this->mysqli->query("INSERT INTO energy (`userid`, `tag`, `year`, `data`) VALUES ('$userid','$tag','$year','$data')");
+      }
+      else
+      {
+        $id = $row->id;
+        $this->mysqli->query("UPDATE energy SET `data` = '$data' WHERE `id` = '$id'");
+      }
+    }
+
+    public function item_remove($userid, $tag, $year)
+    {
+      $result = $this->mysqli->query("DELETE FROM energy WHERE `userid` = '$userid' AND `tag` = '$tag' AND `year` = '$year' ");
+    }
+
+    public function get_year($userid, $year)
+    {
+      $entries = array();
+      $result = $this->mysqli->query("SELECT `id`, `tag`, `year`, `data` FROM energy WHERE `userid` = '$userid' AND `year` = '$year' ");
+      while ($row = $result->fetch_object()) 
+      {
+        $entries[] = $row;
+      }
+      return $entries;
+    }
 }
 
 ?>

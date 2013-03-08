@@ -17,56 +17,58 @@
 
   function energy_controller()
   {
+    global $mysqli, $session, $route;
+
     include "Modules/energy/energy_model.php";
+    $energy = new Energy($mysqli);
+
     include "Modules/energy/energytypes.php";
-    global $session, $route;
 
-    $output['content'] = "";
-    $output['message'] = "";
+    $result = false;
 
-    if ($route['action'] == "list" && $session['read'])
+    if ($route->action == "list" && $session['read'])
     {
-      $energyitems = energy_get_year($session['userid'], 2012);
-      $output['content'] = view("energy/list_view.php", array('energyitems' => $energyitems, 'energytypes'=>$energytypes));
+      $energyitems = $energy->get_year($session['userid'], 2012);
+      $result = view("Modules/energy/list_view.php", array('energyitems' => $energyitems, 'energytypes'=>$energytypes));
     }
 
-    if ($route['action'] == "items" && $session['read'])
+    if ($route->action == "items" && $session['read'])
     {
-      $energyitems = energy_get_year($session['userid'], 2012);
-      $output['content'] = json_encode($energyitems);
+      $energyitems = $energy->get_year($session['userid'], 2012);
+      $result = json_encode($energyitems);
     }
 
-    if ($route['action'] == "types" && $session['read'])
+    if ($route->action == "types" && $session['read'])
     {
-      $output['content'] = json_encode($energytypes);
+      $result = json_encode($energytypes);
     }
 
-    if ($route['action'] == "item" && $route['subaction'] == "add" && $session['write'])
+    if ($route->action == "item" && $route->subaction == "add" && $session['write'])
     {
       $tag = preg_replace('/[^\w\s-]/','',get('tag'));
       $data = preg_replace('/[^\w\s-.",:{}\[\]]/','',get('data'));
       
-      $energyitems = energy_add_item($session['userid'], $tag, 2012, $data);
+      $energyitems = $energy->add_item($session['userid'], $tag, 2012, $data);
     }
 
-    if ($route['action'] == "item" && $route['subaction'] == "remove" && $session['write'])
+    if ($route->action == "item" && $route->subaction == "remove" && $session['write'])
     {
       $tag = preg_replace('/[^\w\s-]/','',get('tag'));
-      $energyitems = energy_item_remove($session['userid'], $tag, 2012);
+      $energyitems = $energy->item_remove($session['userid'], $tag, 2012);
     }
 
-    if ($route['action'] == "save" && $session['write'])
+    if ($route->action == "save" && $session['write'])
     {
       $data = preg_replace('/[^\w\s-.",:{}\[\]]/','',get('data'));
       $data = json_decode($data);
       
       foreach ($data as $item)
       {
-        energy_item_set($session['userid'], $item->tag, $item->year, $item->data);
+        $energy->item_set($session['userid'], $item->tag, $item->year, $item->data);
       }
 
-      $output['content'] = "saved";
+      $result = "saved";
     }
 
-    return $output;
+    return array('content'=>$result);
   }
