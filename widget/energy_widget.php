@@ -13,7 +13,7 @@
 
   include "Modules/energy/energytypes.php";
 
-  $energyitems = $energy->get_year($session['userid'], 2012);
+  $energyitems = $energy->get_year($session['userid'], 2013);
 ?>
 
 <script>
