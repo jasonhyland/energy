@@ -17,15 +17,16 @@ class Energy
       $data = json_encode($data);
 
       $result = $this->mysqli->query("SELECT `id` FROM energy WHERE `userid` = '$userid' AND `tag` = '$tag' AND `year` = '$year' ");
-      $row = $result->fetch_object();
+      $row = $result->fetch_array();
 
       if (!$row)
       {
+        //echo $tag." does not exist\n";
         $this->mysqli->query("INSERT INTO energy (`userid`, `tag`, `year`, `data`) VALUES ('$userid','$tag','$year','$data')");
       }
       else
       {
-        $id = $row->id;
+        $id = $row['id'];
         $this->mysqli->query("UPDATE energy SET `data` = '$data' WHERE `id` = '$id'");
       }
     }

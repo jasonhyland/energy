@@ -109,7 +109,7 @@ travel. Helping to put these different uses of energy in context.</p>
 
   $("#additem").click(function(){
     var tag = $("#additemselect").val();
-    var item = {'tag':tag,'year':"2012",'data':{"quantity":0, "efficiency":100}}
+    var item = {'tag':tag,'year':"2013",'data':{"quantity":0, "efficiency":100}}
     energyitems.push(item);
     order_energyitems();
     drawItems();
