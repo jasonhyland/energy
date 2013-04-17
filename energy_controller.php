@@ -28,13 +28,13 @@
 
     if ($route->action == "list" && $session['read'])
     {
-      $energyitems = $energy->get_year($session['userid'], 2012);
+      $energyitems = $energy->get_year($session['userid'], 2013);
       $result = view("Modules/energy/list_view.php", array('energyitems' => $energyitems, 'energytypes'=>$energytypes));
     }
 
     if ($route->action == "items" && $session['read'])
     {
-      $energyitems = $energy->get_year($session['userid'], 2012);
+      $energyitems = $energy->get_year($session['userid'], 2013);
       $result = json_encode($energyitems);
     }
 
@@ -48,13 +48,13 @@
       $tag = preg_replace('/[^\w\s-]/','',get('tag'));
       $data = preg_replace('/[^\w\s-.",:{}\[\]]/','',get('data'));
       
-      $energyitems = $energy->add_item($session['userid'], $tag, 2012, $data);
+      $energyitems = $energy->add_item($session['userid'], $tag, 2013, $data);
     }
 
     if ($route->action == "item" && $route->subaction == "remove" && $session['write'])
     {
       $tag = preg_replace('/[^\w\s-]/','',get('tag'));
-      $energyitems = $energy->item_remove($session['userid'], $tag, 2012);
+      $energyitems = $energy->item_remove($session['userid'], $tag, 2013);
     }
 
     if ($route->action == "save" && $session['write'])

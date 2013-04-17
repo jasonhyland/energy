@@ -27,14 +27,35 @@
   */
 
   global $path; 
+
+  $exampledata = false;
+  if (!$energyitems) 
+  {
+    $energyitems[] = array('tag'=>"greenelec",'year'=>2013,'data'=>'{"quantity":"3300","efficiency":100}');
+    $energyitems[] = array('tag'=>"mainsgas",'year'=>2013,'data'=>'{"quantity":"1750","efficiency":85}');
+    $energyitems[] = array('tag'=>"car1",'year'=>2013,'data'=>'{"quantity":0,"efficiency":100,"miles":"5000","mpg":40}');
+
+    $exampledata = true;
+  }
+
 ?>
 
 <script type="text/javascript" src="<?php echo $path; ?>Modules/energy/stack_lib/stacks.js"></script>
 <script type="text/javascript" src="<?php echo $path; ?>Modules/energy/stack_lib/stack_prepare.js"></script>
-<br><br>
+<br>
+<h2>Whole Energy Picture Explorer</h2>
+<p>Create a David MacKay <a href="http://www.withouthotair.com/" >Sustainable Energy Without the Hot Air</a> energy stack of your life. It can be used to compare the contribution of different uses of energy such as electricity use, heating,
+travel. Helping to put these different uses of energy in context.</p>
+
+<?php if ($exampledata) { ?>
+
+<div class="alert alert-info"><b>Example data:</b> The data below is example data to help get started, you can delete the items that dont apply to you, select new items from the add new item dropdown menu and edit the quantites as needed.</div>
+
+<?php } ?>
+
 <div style="width:900px; margin-bottom:10px;" >
   <span style="font-size:24px; font-weight:bold;">Energy Items</span>
-  <span style="font-size:24px; float:right;">Year 2012</span>
+  <span style="font-size:24px; float:right;">Year 2013</span>
 </div>
 
 <div style="width:600px;  float:left; margin-right:10px;">
@@ -55,9 +76,11 @@
       <input id="additem" type="submit" value="Add" class="btn btn-info" />
       </div>
       <div style="clear:both"></div>
-
     </div>
+
   </div>
+  <button id="save" class="btn btn-primary" style="float:right; margin-right:10px">Save</button><div id="saved" style="padding-top:6px; padding-right:10px; color: #444; font-size:12px; float:right;">Saved</div>
+
 
 </div>
 
@@ -66,9 +89,7 @@
   <i style="font-size:12px; color:#444;">To embed in dashboard goto:<br> Dashboard > Edit > Widgets > stack</i>
 </div>
       <div style="clear:both"></div>
-  <div style="padding:10px;">
-  <div style="width:55px; float:left;"><input id="save" type="submit" value="Save" /></div><div id="saved" style="padding-top:4px; color: #444; font-size:12px;">Saved</div>
-  </div>
+
 <script type="application/javascript">
   var path = "<?php echo $path; ?>";
   var energytypes = <?php echo json_encode($energytypes); ?>;
@@ -104,7 +125,7 @@
       type: "GET",
       url: path+"energy/save.json",           
       data: "&data="+encodeURIComponent(JSON.stringify(energyitems)),
-      success: function(msg) {if (msg=="saved") $("#saved").html("Saved");} 
+      success: function(msg) {if (msg=='"saved"') $("#saved").html("Saved");} 
     });
   });
 
