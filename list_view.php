@@ -42,53 +42,75 @@
 
 <script type="text/javascript" src="<?php echo $path; ?>Modules/energy/stack_lib/stacks.js"></script>
 <script type="text/javascript" src="<?php echo $path; ?>Modules/energy/stack_lib/stack_prepare.js"></script>
+
+<style>
+
+.itembox {
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+
+  width:95.5%; 
+  background-color:#fff; 
+  margin-bottom:15px;
+
+  padding:15px;
+}
+</style>
+
 <br>
-<h2>Whole Energy Picture Explorer</h2>
-<p>Create a David MacKay <a href="http://www.withouthotair.com/" >Sustainable Energy Without the Hot Air</a> energy stack of your life. It can be used to compare the contribution of different uses of energy such as electricity use, heating,
-travel. Helping to put these different uses of energy in context.</p>
 
-<?php if ($exampledata) { ?>
+<div class="hero-unit">
 
-<div class="alert alert-info"><b>Example data:</b> The data below is example data to help get started, you can delete the items that dont apply to you, select new items from the add new item dropdown menu and edit the quantites as needed.</div>
+  <h1>Energy Stack Explorer</h1>
+  <p style="margin-top:5px">Create a David MacKay <a href="http://www.withouthotair.com/" >Sustainable Energy Without the Hot Air</a> energy stack of your life. It can be used to compare the contribution of different uses of energy such as electricity use, heating,
+  travel. Helping to put these different uses of energy in context.</p>
 
-<?php } ?>
+  <?php if ($exampledata) { ?>
 
-<div style="width:900px; margin-bottom:10px;" >
-  <span style="font-size:24px; font-weight:bold;">Energy Items</span>
-  <span style="font-size:24px; float:right;">Year 2013</span>
-</div>
+  <div class="alert alert-info"><b>Example data:</b> The data below is example data to help get started, you can delete the items that dont apply to you, select new items from the add new item dropdown menu and edit the quantites as needed.</div>
 
-<div style="width:600px;  float:left; margin-right:10px;">
+  <?php } ?>
+  <br>
 
-  <div id="energyitems"></div>
+  <div class="row-fluid" style="margin-bottom:10px">
+    <div class="span8"><span style="font-size:24px; font-weight:bold;">Energy Items</span></div>
+    <div class="span4" style="text-align:center"><span style="font-size:24px; ">Year 2013</span></div>
+  </div>
 
-  <div style="width:600px; background-color:#efefef; margin-bottom:10px; border: 1px solid #ddd">
-    <div style="padding:10px;  border-top: 1px solid #fff">
-      <div style="float:left; padding-top:2px; font-weight:bold;">Add new item</div>
+  <div class="row-fluid">
 
-      <div style="float:right;">
-      <select id="additemselect" style="width:160px; margin:0px;">
-      <?php while ($energytype = current($energytypes)) { ?>
-      <option value="<?php echo key($energytypes); ?>"><?php echo $energytype['name']; ?></option>
-      <?php next($energytypes); } ?>
-      </select>
+    <div class="span8">
+      <div id="energyitems"></div>
 
-      <input id="additem" type="submit" value="Add" class="btn btn-info" />
+      <!-- Add item and save selector and buttons -->
+
+      <div class="input-prepend input-append">
+        <span class="add-on"><b>Add new item</b></span>
+
+        <select id="additemselect" style="width:200px; margin:0px;">
+          <?php while ($energytype = current($energytypes)) { ?>
+          <option value="<?php echo key($energytypes); ?>"><?php echo $energytype['name']; ?></option>
+          <?php next($energytypes); } ?>
+        </select>
+
+        <button id="additem" class="btn btn-info" type="button">Add</button>
       </div>
+
+      <button id="save" class="btn btn-primary" style="float:right;">Save</button><div id="saved" style="padding-top:0px; color: #444; font-size:12px; float:right; margin-right:10px;">Saved</div>
+
+
+    </div>
+
+    <div class="span4" style="text-align:center">
+      <canvas id="can" width="150" height="460" style="margin-left:20%"></canvas>
       <div style="clear:both"></div>
+      <i style="font-size:12px; color:#444;">To embed in dashboard goto:<br> Dashboard > Edit > Widgets > stack</i>
     </div>
 
   </div>
-  <button id="save" class="btn btn-primary" style="float:right; margin-right:10px">Save</button><div id="saved" style="padding-top:6px; padding-right:10px; color: #444; font-size:12px; float:right;">Saved</div>
-
 
 </div>
-
-<div style="width:300px; height:520px; float:left; margin-bottom:10px; text-align:center; border: 1px solid #ccc; padding-left:20px;">
-  <canvas id="can" width="300" height="460"></canvas> 
-  <i style="font-size:12px; color:#444;">To embed in dashboard goto:<br> Dashboard > Edit > Widgets > stack</i>
-</div>
-      <div style="clear:both"></div>
 
 <script type="application/javascript">
   var path = "<?php echo $path; ?>";
@@ -147,8 +169,7 @@ travel. Helping to put these different uses of energy in context.</p>
       if (energytypes[tag]['procfn']==2) kwhd = calc_total(z);
       if (energytypes[tag]['procfn']==3) kwhd = calc_total_mpg(z);
 
-      out += '<div style="width:600px; background-color:#f8f8f8; margin-bottom:10px; border: 1px solid #eee">';
-      out += '<div style="padding:10px;  border-top: 1px solid #fff">'
+      out += '<div class="itembox">';
 
       // Draw item name and kwh/d
       out += '<div style="margin-bottom:8px;">';        
@@ -162,12 +183,11 @@ travel. Helping to put these different uses of energy in context.</p>
       for (i in options)
       {
         if (data[i]==undefined) data[i] = options[i]['default'];
-        out += '<div style="width:250px; float:left;"><b>'+options[i]['name']+':</b> <input class="option" tag="'+i+'" item="'+id+'" type="text" style="width:100px" value="'+data[i]+'"/ > <b>'+options[i]['units']+'</b></div>';
+        out += '<div style="width:300px; float:left;"><b>'+options[i]['name']+':</b> <input class="option" tag="'+i+'" item="'+id+'" type="text" style="width:100px" value="'+data[i]+'"/ > <b>'+options[i]['units']+'</b></div>';
 
       }
 
       out += '<div style="clear:both"></div>';
-      out += '</div>';
       out += '</div>';
     }
 
